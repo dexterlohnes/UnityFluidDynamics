@@ -205,23 +205,20 @@ public class Show : MonoBehaviour {
         return i + j * (N + 2);
     }
     
-    private static void Swap(uint size, float[] a, float[] b)
+    private static void Swap(uint size, ref float[] a, ref float[] b)
     {
-        for(uint i = 0; i < size; ++i)
-        {
-            float tmp = a[i];
-            a[i] = b[i];
-            b[i] = tmp;
-        }
+        var tmp = a;
+        a = b;
+        b = tmp;
     }
 
     private static void UpdateVelocity(float cellSize, uint N, uint size, float[] u, float[] v, float[] upre, float[] vpre, float diffusionVelocity, float dt)
     {
         AddSource(size, u, upre, dt); AddSource(size, v, vpre, dt);
-        Swap(size, upre, u); Diffuse(N, u, upre, diffusionVelocity, dt, BoundaryCollisionType.XDirection);
-        Swap(size, vpre, v); Diffuse(N, v, vpre, diffusionVelocity, dt, BoundaryCollisionType.YDirection);
+        Swap(size, ref upre, ref u); Diffuse(N, u, upre, diffusionVelocity, dt, BoundaryCollisionType.XDirection);
+        Swap(size, ref vpre, ref v); Diffuse(N, v, vpre, diffusionVelocity, dt, BoundaryCollisionType.YDirection);
         Project(cellSize, N, u, v, upre, vpre);
-        Swap(size, upre, u); Swap(size, vpre, v);
+        Swap(size, ref upre, ref u); Swap(size, ref vpre, ref v);
         Advect(N, dt, u, upre, upre, vpre, BoundaryCollisionType.XDirection); Advect(N, dt, v, vpre, upre, vpre, BoundaryCollisionType.YDirection);
         Project(cellSize, N, u, v, upre, vpre);
     }
@@ -229,9 +226,9 @@ public class Show : MonoBehaviour {
     private static void UpdateDensity(uint N, uint size, float[] densities, float[] densitiesPre, float[] u, float[] v, float diffusionVelocity, float dt)
     {
         AddSource(size, densities, densitiesPre, dt);
-        Swap(size, densitiesPre, densities);
+        Swap(size, ref densitiesPre, ref densities);
         Diffuse(N, densities, densitiesPre, diffusionVelocity, dt, BoundaryCollisionType.Null);   
-        Swap(size, densitiesPre, densities);       
+        Swap(size, ref densitiesPre, ref densities);       
         Advect(N, dt, densities, densitiesPre, u, v, BoundaryCollisionType.Null);
     }
     
