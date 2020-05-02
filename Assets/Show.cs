@@ -71,17 +71,17 @@ public class Show : MonoBehaviour {
 
     private void Update()
     {
-        for(uint i = 0;i < size; ++i)
+        for(uint i = 0;i < size; i++)
         {
             velocityUpre[i] = 0f;
         }
 
-        for (uint i = 0; i < size; ++i)
+        for (uint i = 0; i < size; i++)
         {
             velocityVpre[i] = 0f;
         }
 
-        for (uint i = 0; i < size; ++i)
+        for (uint i = 0; i < size; i++)
         {
             densitiesPre[i] = 0f;
         }
@@ -239,11 +239,11 @@ public class Show : MonoBehaviour {
     private static void Diffuse(uint N, float[] cur, float[] pre, float dt, float diffusionVelocity, BoundaryCollisionType b)
     {
         float a = diffusionVelocity * dt * N * N;
-        for (uint k = 0; k < 20; ++k)
+        for (uint k = 0; k < 20; k++)
         {
-            for(uint i = 1; i <= N; ++i)
+            for(uint i = 1; i <= N; i++)
             {
-                for(uint j = 1; j <= N; ++j)
+                for(uint j = 1; j <= N; j++)
                 {
                     uint centerIndex = GetIndex(N, i, j);
                     cur[centerIndex] = 
@@ -271,9 +271,9 @@ public class Show : MonoBehaviour {
     private static void Advect(uint N, float dt, float[] dest, float[] destPre, float[] u, float[] v, BoundaryCollisionType b)
     {
         float a = dt * N;
-        for(uint i = 1; i <= N; ++i)
+        for(uint i = 1; i <= N; i++)
         {
-            for (uint j = 1; j <= N; ++j)
+            for (uint j = 1; j <= N; j++)
             {
                 uint centerIndex = GetIndex(N, i, j);
                 float x = i - a * u[centerIndex];
@@ -316,11 +316,11 @@ public class Show : MonoBehaviour {
             }
         }
 
-        for (uint k = 0; k < 20; ++k)
+        for (uint k = 0; k < 20; k++)
         {
-            for (uint i = 1; i <= N; ++i)
+            for (uint i = 1; i <= N; i++)
             {
-                for (uint j = 1; j <= N; ++j)
+                for (uint j = 1; j <= N; j++)
                 {
                     a[GetIndex(N, i, j)] = 
                         (
