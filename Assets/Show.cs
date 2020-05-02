@@ -297,21 +297,23 @@ public class Show : MonoBehaviour {
         SetBoundary(N, b, dest);
     }
 
-    private static void Project(float h, uint N, float[] u, float[] v, float[] a, float[] b)
+    private static void Project(float h, uint N, float[] u, float[] v, float[] p, float[] div)
     {
         for (uint i = 1; i <= N; i++)
         {
             for (uint j = 1; j <= N; j++)
             {
                 uint centerIndex = GetIndex(N, i, j);
-                b[centerIndex] = - 0.5f * h * 
+                div[centerIndex] = - 0.5f * h * 
                     (   
                         u[GetIndex(N ,i + 1, j)] - u[GetIndex(N, i - 1, j)] +
                         v[GetIndex(N, i, j + 1)] - v[GetIndex(N, i, j - 1)]
                     );
-                a[GetIndex(N, i, j)] = 0;
+                p[GetIndex(N, i, j)] = 0;
             }
         }
+        SetBoundary(N, BoundaryCollisionType.Null, div);
+        SetBoundary(N, BoundaryCollisionType.Null, p);
 
         for (uint k = 0; k < 20; k++)
         {
@@ -319,17 +321,17 @@ public class Show : MonoBehaviour {
             {
                 for (uint j = 1; j <= N; j++)
                 {
-                    a[GetIndex(N, i, j)] = 
+                    p[GetIndex(N, i, j)] = 
                         (
-                            b[GetIndex(N, i, j)] + 
-                            a[GetIndex(N, i - 1, j)] + 
-                            a[GetIndex(N, i + 1, j)] +
-                            a[GetIndex(N, i, j - 1)] + 
-                            a[GetIndex(N, i, j + 1)]
+                            div[GetIndex(N, i, j)] + 
+                            p[GetIndex(N, i - 1, j)] + 
+                            p[GetIndex(N, i + 1, j)] +
+                            p[GetIndex(N, i, j - 1)] + 
+                            p[GetIndex(N, i, j + 1)]
                         ) / 4f;
                 }
             }
-            SetBoundary(N, BoundaryCollisionType.Null, a);
+            SetBoundary(N, BoundaryCollisionType.Null, p);
         }
 
         for (uint i = 1; i <= N; i++)
@@ -337,8 +339,8 @@ public class Show : MonoBehaviour {
             for (uint j = 1; j <= N; j++)
             {
                 uint centerIndex = GetIndex(N, i, j);
-                u[centerIndex] -= 0.5f * (a[GetIndex(N, i + 1, j)] - a[GetIndex(N, i - 1, j)]) / h;
-                v[centerIndex] -= 0.5f * (a[GetIndex(N, i, j + 1)] - a[GetIndex(N, i, j - 1)]) / h;
+                u[centerIndex] -= 0.5f * (p[GetIndex(N, i + 1, j)] - p[GetIndex(N, i - 1, j)]) / h;
+                v[centerIndex] -= 0.5f * (p[GetIndex(N, i, j + 1)] - p[GetIndex(N, i, j - 1)]) / h;
             }
         }
 
